@@ -1,6 +1,5 @@
 package hiber.model;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -8,6 +7,7 @@ public class User {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Column(name="id")
    private Long id;
 
    @Column(name = "name")
@@ -19,12 +19,23 @@ public class User {
    @Column(name = "email")
    private String email;
 
+   @OneToOne(cascade = CascadeType.ALL) // тип связи между объектами car & user или в бд между таблицами users и cars
+   @JoinColumn(name="car_id") // в users будет создан столбец car_id, являющийся foreign key для столбца id в cars
+   private Car car;
+
    public User() {}
-   
+
    public User(String firstName, String lastName, String email) {
       this.firstName = firstName;
       this.lastName = lastName;
       this.email = email;
+   }
+
+   public User(String firstName, String lastName, String email, Car car) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.email = email;
+      this.car = car;
    }
 
    public Long getId() {
@@ -57,5 +68,23 @@ public class User {
 
    public void setEmail(String email) {
       this.email = email;
+   }
+
+   public Car getCar() {
+      return car;
+   }
+
+   public void setCar(Car car) {
+      this.car = car;
+   }
+
+   @Override
+   public String toString() {
+      return "User{" +
+              "firstName='" + firstName + '\'' +
+              ", lastName='" + lastName + '\'' +
+              ", email='" + email + '\'' +
+              ", car=" + car +
+              '}';
    }
 }
